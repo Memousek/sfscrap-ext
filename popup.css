@@ -1,0 +1,99 @@
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-family: Arial, sans-serif;
+}
+
+main {
+  padding: 14px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.hint {
+  margin: 0 0 12px;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tab {
+  flex: 1;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: #0b1228;
+  color: #cbd5e1;
+  padding: 7px 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.tab.is-active {
+  background: #1d4ed8;
+  border-color: #3b82f6;
+  color: #ffffff;
+}
+
+.panel {
+  display: none;
+}
+
+.panel.is-active {
+  display: block;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+#status {
+  margin: 12px 0;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+button {
+  width: 100%;
+  border: 1px solid #3b82f6;
+  border-radius: 8px;
+  background: #1d4ed8;
+  color: white;
+  padding: 8px 10px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.debug-label {
+  display: block;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.debug-box {
+  width: 100%;
+  min-height: 62px;
+  resize: vertical;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #0b1228;
+  color: #e2e8f0;
+  padding: 8px;
+  font-size: 11px;
+  line-height: 1.35;
+  box-sizing: border-box;
+}

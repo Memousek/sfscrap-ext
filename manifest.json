@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "S&F Scrapbook Missing Items",
+  "version": "0.1.0",
+  "description": "Shows which items are missing in your Shakes & Fidget scrapbook.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://*.sfgame.net/*",
+    "https://*.sfgame.cz/*",
+    "https://*.sfgame.sk/*",
+    "https://*.shakesandfidget.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.sfgame.net/*",
+        "https://*.sfgame.cz/*",
+        "https://*.sfgame.sk/*",
+        "https://*.shakesandfidget.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "overlay.css"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_title": "S&F Scrapbook Helper",
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "injected.js"
+      ],
+      "matches": [
+        "https://*.sfgame.net/*",
+        "https://*.sfgame.cz/*",
+        "https://*.sfgame.sk/*",
+        "https://*.shakesandfidget.com/*"
+      ]
+    }
+  ]
+}

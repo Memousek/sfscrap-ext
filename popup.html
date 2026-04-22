@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>S&F Scrapbook Helper</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main>
+      <h1>S&F Scrapbook Helper</h1>
+      <p class="hint">Aktivní pouze na stránkách Shakes &amp; Fidget.</p>
+      <div class="tabs">
+        <button id="tab-overview" class="tab is-active" type="button">Přehled</button>
+        <button id="tab-tools" class="tab" type="button">Nástroje</button>
+        <button id="tab-debug" class="tab" type="button">Debug</button>
+      </div>
+
+      <section id="panel-overview" class="panel is-active">
+        <div class="row"><span>Známé itemy:</span><strong id="owned">0</strong></div>
+        <div class="row"><span>Naskenovaní hráči:</span><strong id="players">0</strong></div>
+        <p id="status">Otevři hru a proklikni scrapbook + Hall of Fame.</p>
+      </section>
+
+      <section id="panel-tools" class="panel">
+        <p class="hint">Nástroje pro práci se získanými daty.</p>
+        <button id="copy-missing" type="button">Kopírovat chybějící item ID</button>
+        <button id="reset" type="button">Reset dat</button>
+      </section>
+
+      <section id="panel-debug" class="panel">
+        <div class="row"><span>Vybraný hráč:</span><strong id="debug-player">-</strong></div>
+        <label class="debug-label" for="debug-owned">Moje item ID (scrapbook)</label>
+        <textarea id="debug-owned" class="debug-box" readonly></textarea>
+        <label class="debug-label" for="debug-player-items">Item ID hráče</label>
+        <textarea id="debug-player-items" class="debug-box" readonly></textarea>
+        <label class="debug-label" for="debug-missing">Chybějící ID (hráč - já)</label>
+        <textarea id="debug-missing" class="debug-box" readonly></textarea>
+      </section>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>
