@@ -1,24 +1,20 @@
 {
   "manifest_version": 3,
-  "name": "S&F Scrapbook Missing Items",
-  "version": "0.1.0",
+  "name": "S&F Scrapbook Helper",
+  "version": "0.1.5",
   "description": "Shows which items are missing in your Shakes & Fidget scrapbook.",
   "permissions": [
     "storage"
   ],
   "host_permissions": [
     "https://*.sfgame.net/*",
-    "https://*.sfgame.cz/*",
-    "https://*.sfgame.sk/*",
-    "https://*.shakesandfidget.com/*"
+    "https://*.sfgame.cz/*"
   ],
   "content_scripts": [
     {
       "matches": [
         "https://*.sfgame.net/*",
-        "https://*.sfgame.cz/*",
-        "https://*.sfgame.sk/*",
-        "https://*.shakesandfidget.com/*"
+        "https://*.sfgame.cz/*"
       ],
       "js": [
         "content.js"
@@ -40,9 +36,7 @@
       ],
       "matches": [
         "https://*.sfgame.net/*",
-        "https://*.sfgame.cz/*",
-        "https://*.sfgame.sk/*",
-        "https://*.shakesandfidget.com/*"
+        "https://*.sfgame.cz/*"
       ]
     }
   ]
