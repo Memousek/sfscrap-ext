@@ -6,9 +6,17 @@ function missingIds(saved) {
   const byId = new Map(players.map((p) => [String(p.playerId), p]));
   const preferredId = saved.selectedPlayerId || saved.lastPlayerId;
   const player = preferredId ? byId.get(String(preferredId)) : players[players.length - 1];
-  if (!player || !Array.isArray(player.itemIds)) {
-    return [];
+  if (!player) return [];
+
+  // Use itemCandidates if available: item is missing only if ALL candidates are absent
+  if (Array.isArray(player.itemCandidates)) {
+    return player.itemCandidates
+      .filter((group) => group.every((pos) => !ownedIds.has(Number(pos))))
+      .map((group) => group[0]); // return first candidate as representative ID
   }
+
+  // Legacy flat itemIds fallback
+  if (!Array.isArray(player.itemIds)) return [];
   return player.itemIds
     .map((n) => Number(n))
     .filter((n) => Number.isInteger(n) && n > 0 && !ownedIds.has(n));

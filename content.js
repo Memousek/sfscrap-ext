@@ -603,93 +603,67 @@
     return true;
   }
 
-  // Convert a player's equipped item (slot, classId, apiModelId) to its scrapbook bit position.
-  // apiModelId = values[slot * SF_ITEM_PARSE_LEN + 3] % 1000
-  // quality    = values[slot * SF_ITEM_PARSE_LEN + 17]  (>= 2 = likely epic)
-  function sfEquipItemToScrapbookBitPos(slotName, classId, apiModelId, quality) {
+  // Returns all plausible scrapbook bit-position candidates for one equipment slot.
+  // We don't know for certain whether values[3]%1000 is the raw relPos (formula A)
+  // or just the base model_id with color encoded separately in values[17] (formula B).
+  // Returning ALL valid candidates and checking any-match removes the ambiguity.
+  function sfEquipItemBitPosCandidates(slotName, classId, apiModelId, quality) {
     if (!apiModelId || apiModelId <= 0) {
-      return null;
+      return [];
     }
-    // Epic items have quality >= 2 in the API and their model IDs start at 50 in the scrapbook
-    const isEpic = quality >= 2 && apiModelId >= 50;
+
+    const candidates = new Set();
+
+    function tryAdd(start, end, relPos, ignored) {
+      if (relPos < 1 || relPos > end - start) return;
+      const bitPos = start + relPos - 1;
+      if (!ignored.includes(bitPos)) candidates.add(bitPos);
+    }
 
     for (const [start, end, slot, cls, epic, ignored] of SF_SCRAPBOOK_RANGES) {
-      if (slot !== slotName || cls !== classId || epic !== isEpic) {
-        continue;
-      }
-      const size = end - start;
-      const relPos = epic ? apiModelId - 49 : apiModelId;
-      if (relPos < 1 || relPos > size) {
-        continue;
-      }
-      const bitPos = start + relPos - 1;
-      if (ignored.includes(bitPos)) {
-        return null;
-      }
-      return bitPos;
-    }
+      if (slot !== slotName || cls !== classId) continue;
 
-    // Fallback: try the other (non-epic) range for the same slot
-    if (isEpic) {
-      for (const [start, end, slot, cls, epic, ignored] of SF_SCRAPBOOK_RANGES) {
-        if (slot !== slotName || cls !== classId || epic !== false) {
-          continue;
-        }
-        const relPos = apiModelId;
-        if (relPos < 1 || relPos > end - start) {
-          continue;
-        }
-        const bitPos = start + relPos - 1;
-        if (ignored.includes(bitPos)) {
-          return null;
-        }
-        return bitPos;
+      if (!epic) {
+        // Formula A: apiModelId is the direct relative position
+        tryAdd(start, end, apiModelId, ignored);
+        // Formula B: apiModelId is the base model, quality (1-5) is the color
+        const color = quality >= 1 && quality <= 5 ? quality : 1;
+        tryAdd(start, end, (apiModelId - 1) * 5 + color, ignored);
+      } else {
+        // Epic: relPos = apiModelId - 49  (same under both interpretations)
+        tryAdd(start, end, apiModelId - 49, ignored);
       }
     }
 
-    return null;
+    return [...candidates];
   }
 
-  // Parse otherplayersaveequipment from S&F API text and return scrapbook bit positions.
-  // The API returns 10 slots × 19 integers = 190 slash-separated integers.
-  // Item type ID is at index 0, class+model at index 3, quality at index 17 of each group.
-  function parseSfEquipmentBitPositions(text) {
-    // Use a broad lookahead – S&F may place the key after any delimiter
+  // Parse otherplayersaveequipment from S&F API text.
+  // Returns an array of candidate-groups: one inner array per occupied slot,
+  // each inner array contains all plausible scrapbook bit positions for that item.
+  function parseSfEquipmentCandidates(text) {
     const match = text.match(/otherplayersaveequipment[:/]([\d/\-]+)/i);
-    if (!match?.[1]) {
-      return null;
-    }
+    if (!match?.[1]) return null;
 
     const values = match[1].split("/").map(Number);
-    const expectedLen = SF_ITEM_PARSE_LEN * SF_SLOT_ORDER.length;
-    if (values.length < expectedLen) {
-      return null;
-    }
+    if (values.length < SF_ITEM_PARSE_LEN * SF_SLOT_ORDER.length) return null;
 
-    const bitPositions = [];
+    const groups = [];
     for (let s = 0; s < SF_SLOT_ORDER.length; s++) {
       const base = s * SF_ITEM_PARSE_LEN;
       const itemTypeId = values[base];
-      if (!itemTypeId || itemTypeId <= 0) {
-        continue; // empty slot
-      }
+      if (!itemTypeId || itemTypeId <= 0) continue;
       const classAndModel = values[base + 3];
-      if (!classAndModel || classAndModel < 0) {
-        continue;
-      }
+      if (!classAndModel || classAndModel < 0) continue;
       const classId = Math.floor(classAndModel / 1000);
       const modelId = classAndModel % 1000;
+      if (modelId <= 0) continue;
       const quality = values[base + 17] || 0;
-      if (modelId <= 0) {
-        continue;
-      }
-      const bitPos = sfEquipItemToScrapbookBitPos(SF_SLOT_ORDER[s], classId, modelId, quality);
-      if (bitPos !== null) {
-        bitPositions.push(bitPos);
-      }
+      const candidates = sfEquipItemBitPosCandidates(SF_SLOT_ORDER[s], classId, modelId, quality);
+      if (candidates.length > 0) groups.push(candidates);
     }
 
-    return bitPositions.length > 0 ? bitPositions : null;
+    return groups.length > 0 ? groups : null;
   }
 
   function extractPlayerFromText(text, url) {
@@ -697,17 +671,19 @@
       return null;
     }
 
-    // Try the exact S&F key first – returns scrapbook bit positions directly,
-    // which is what state.ownedIds stores, so the comparison is correct.
-    const sfBitPositions = parseSfEquipmentBitPositions(text);
-    if (sfBitPositions) {
+    // Try the exact S&F key first.
+    // itemCandidates: one inner array per slot, each inner array holds all plausible
+    // scrapbook bit positions for that item (both formula variants).
+    const sfCandidates = parseSfEquipmentCandidates(text);
+    if (sfCandidates) {
       const parsedPlayerId = parsePlayerIdFromUrl(url);
       const payloadName = extractPlayerNameFromText(text);
       const domName = inferNameFromProfileDom();
       return {
         playerId: String(parsedPlayerId || url || `player_${Date.now()}`),
         playerName: payloadName || domName || (parsedPlayerId ? `Player ${parsedPlayerId}` : "Scanned player"),
-        itemIds: sfBitPositions
+        itemCandidates: sfCandidates,
+        itemIds: sfCandidates.map((g) => g[0]) // first candidate kept for compat
       };
     }
 
@@ -860,14 +836,20 @@
     return records;
   }
 
-  function missingIdsFor(playerItemIds) {
-    const missing = [];
-    for (const id of playerItemIds) {
-      if (!state.ownedIds.has(id)) {
-        missing.push(id);
-      }
+  // Returns the missing item groups for a player.
+  // If itemCandidates is available (array of candidate arrays per item), an item counts
+  // as missing only when NONE of its candidate bit positions are in the owned set.
+  // Falls back to the flat itemIds array for backward compatibility.
+  function missingIdsFor(player) {
+    const candidates = player?.itemCandidates;
+    if (Array.isArray(candidates)) {
+      return candidates.filter((group) =>
+        group.every((bitPos) => !state.ownedIds.has(bitPos))
+      );
     }
-    return missing;
+    // Legacy flat array path
+    const ids = player?.itemIds ?? (Array.isArray(player) ? player : []);
+    return ids.filter((id) => !state.ownedIds.has(id));
   }
 
   function saveState() {
@@ -1100,7 +1082,7 @@
       return;
     }
 
-    const missing = missingIdsFor(player.itemIds);
+    const missing = missingIdsFor(player);
     const domLabel = normalizePlayerLabel(inferNameFromProfileDom());
     const rememberedLabel = normalizePlayerLabel(state.selectedPlayerName);
     const payloadLabel = normalizePlayerLabel(player.playerName);
