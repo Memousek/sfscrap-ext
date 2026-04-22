@@ -23,50 +23,50 @@
   // Scrapbook range table from sf-api/src/gamestate/unlockables.rs
   // Format: [rangeStart, rangeEnd, slotName, classId (0=none,1=W,2=M,3=S), isEpic, ignoredAbsolutePositions]
   const SF_SCRAPBOOK_RANGES = [
-    [801,  1011, "Amulet",     0, false, []],
-    [1011, 1051, "Amulet",     0, true,  []],
-    [1051, 1211, "Ring",       0, false, []],
-    [1211, 1251, "Ring",       0, true,  []],
-    [1251, 1325, "Talisman",   0, false, []],
-    [1325, 1365, "Talisman",   0, true,  []],
-    [1365, 1665, "Weapon",     1, false, []],
-    [1665, 1705, "Weapon",     1, true,  []],
-    [1705, 1805, "Shield",     1, false, []],
-    [1805, 1845, "Shield",     1, true,  []],
-    [1845, 1945, "BreastPlate",1, false, []],
-    [1945, 1985, "BreastPlate",1, true,  [1954, 1955]],
-    [1985, 2085, "FootWear",   1, false, []],
-    [2085, 2125, "FootWear",   1, true,  [2094, 2095]],
-    [2125, 2225, "Gloves",     1, false, []],
-    [2225, 2265, "Gloves",     1, true,  [2234, 2235]],
-    [2265, 2365, "Hat",        1, false, []],
-    [2365, 2405, "Hat",        1, true,  [2374, 2375]],
-    [2405, 2505, "Belt",       1, false, []],
-    [2505, 2545, "Belt",       1, true,  [2514, 2515]],
-    [2545, 2645, "Weapon",     2, false, []],
-    [2645, 2685, "Weapon",     2, true,  []],
-    [2685, 2785, "BreastPlate",2, false, []],
-    [2785, 2825, "BreastPlate",2, true,  [2794, 2795]],
-    [2825, 2925, "FootWear",   2, false, []],
-    [2925, 2965, "FootWear",   2, true,  [2934, 2935]],
-    [2965, 3065, "Gloves",     2, false, []],
-    [3065, 3105, "Gloves",     2, true,  [3074, 3075]],
-    [3105, 3205, "Hat",        2, false, []],
-    [3205, 3245, "Hat",        2, true,  [3214, 3215]],
-    [3245, 3345, "Belt",       2, false, []],
-    [3345, 3385, "Belt",       2, true,  [3354, 3355]],
-    [3385, 3485, "Weapon",     3, false, []],
-    [3485, 3525, "Weapon",     3, true,  []],
-    [3525, 3625, "BreastPlate",3, false, []],
-    [3625, 3665, "BreastPlate",3, true,  [3634, 3635]],
-    [3665, 3765, "FootWear",   3, false, []],
-    [3765, 3805, "FootWear",   3, true,  [3774, 3775]],
-    [3805, 3905, "Gloves",     3, false, []],
-    [3905, 3945, "Gloves",     3, true,  [3914, 3915]],
-    [3945, 4045, "Hat",        3, false, []],
-    [4045, 4085, "Hat",        3, true,  [4054, 4055]],
-    [4085, 4185, "Belt",       3, false, []],
-    [4185, 4225, "Belt",       3, true,  [4194, 4195]],
+    [801, 1011, "Amulet", 0, false, []],
+    [1011, 1051, "Amulet", 0, true, []],
+    [1051, 1211, "Ring", 0, false, []],
+    [1211, 1251, "Ring", 0, true, []],
+    [1251, 1325, "Talisman", 0, false, []],
+    [1325, 1365, "Talisman", 0, true, []],
+    [1365, 1665, "Weapon", 1, false, []],
+    [1665, 1705, "Weapon", 1, true, []],
+    [1705, 1805, "Shield", 1, false, []],
+    [1805, 1845, "Shield", 1, true, []],
+    [1845, 1945, "BreastPlate", 1, false, []],
+    [1945, 1985, "BreastPlate", 1, true, [1954, 1955]],
+    [1985, 2085, "FootWear", 1, false, []],
+    [2085, 2125, "FootWear", 1, true, [2094, 2095]],
+    [2125, 2225, "Gloves", 1, false, []],
+    [2225, 2265, "Gloves", 1, true, [2234, 2235]],
+    [2265, 2365, "Hat", 1, false, []],
+    [2365, 2405, "Hat", 1, true, [2374, 2375]],
+    [2405, 2505, "Belt", 1, false, []],
+    [2505, 2545, "Belt", 1, true, [2514, 2515]],
+    [2545, 2645, "Weapon", 2, false, []],
+    [2645, 2685, "Weapon", 2, true, []],
+    [2685, 2785, "BreastPlate", 2, false, []],
+    [2785, 2825, "BreastPlate", 2, true, [2794, 2795]],
+    [2825, 2925, "FootWear", 2, false, []],
+    [2925, 2965, "FootWear", 2, true, [2934, 2935]],
+    [2965, 3065, "Gloves", 2, false, []],
+    [3065, 3105, "Gloves", 2, true, [3074, 3075]],
+    [3105, 3205, "Hat", 2, false, []],
+    [3205, 3245, "Hat", 2, true, [3214, 3215]],
+    [3245, 3345, "Belt", 2, false, []],
+    [3345, 3385, "Belt", 2, true, [3354, 3355]],
+    [3385, 3485, "Weapon", 3, false, []],
+    [3485, 3525, "Weapon", 3, true, []],
+    [3525, 3625, "BreastPlate", 3, false, []],
+    [3625, 3665, "BreastPlate", 3, true, [3634, 3635]],
+    [3665, 3765, "FootWear", 3, false, []],
+    [3765, 3805, "FootWear", 3, true, [3774, 3775]],
+    [3805, 3905, "Gloves", 3, false, []],
+    [3905, 3945, "Gloves", 3, true, [3914, 3915]],
+    [3945, 4045, "Hat", 3, false, []],
+    [4045, 4085, "Hat", 3, true, [4054, 4055]],
+    [4085, 4185, "Belt", 3, false, []],
+    [4185, 4225, "Belt", 3, true, [4194, 4195]],
   ];
 
   const state = {
@@ -233,7 +233,7 @@
     const blockedNames = new Set([
       "Vybraný hráč",
       "Scanned player",
-      
+
       "Player",
       "Scrapbook načten"
     ]);
@@ -540,10 +540,9 @@
       return null;
     }
     const patterns = [
-      // S&F API: slash-delimited values, e.g. otherplayersavename:mall/...
-      /(?:^|[&\t\n\r])(?:otherplayersavename|savename)[:=/]([^&\t\n\r/]{2,32})/i,
-      // Generic key=value; exclude / so we don't grab trailing data
-      /(?:^|[&\s])(name|playername|nick|nickname|charactername)[:=]([^&|;,\n\r/]{2,32})/i,
+      // S&F API: / is field separator, so key may be preceded by / & \t \n
+      /(?:^|[&\t\n\r/])(?:otherplayersavename|savename|othername|othercname|cname)[:=]([^&\t\n\r/]{2,32})/i,
+      /(?:^|[&\t\n\r/])(?:name|playername|nick|nickname|charactername)[:=]([^&\t\n\r/]{2,32})/i,
       /"name"\s*:\s*"([^"]{2,40})"/i,
       /"playerName"\s*:\s*"([^"]{2,40})"/i,
       /"nick"\s*:\s*"([^"]{2,40})"/i
@@ -655,7 +654,8 @@
   // The API returns 10 slots × 19 integers = 190 slash-separated integers.
   // Item type ID is at index 0, class+model at index 3, quality at index 17 of each group.
   function parseSfEquipmentBitPositions(text) {
-    const match = text.match(/(?:^|[&\n\t\r])otherplayersaveequipment[:/]([\d/]+)/i);
+    // Use a broad lookahead – S&F may place the key after any delimiter
+    const match = text.match(/otherplayersaveequipment[:/]([\d/\-]+)/i);
     if (!match?.[1]) {
       return null;
     }
@@ -709,6 +709,12 @@
         playerName: payloadName || domName || (parsedPlayerId ? `Player ${parsedPlayerId}` : "Scanned player"),
         itemIds: sfBitPositions
       };
+    }
+
+    // If the S&F equipment key is present but parsing failed (e.g. unexpected format),
+    // don't run the heuristic – it would misidentify the player ID or other numbers as items.
+    if (/otherplayersaveequipment/i.test(text)) {
+      return null;
     }
 
     // Heuristic fallback for unknown formats
@@ -989,7 +995,7 @@
       <div id="sfh-content">
         <div class="sfh-row"><span>Známé itemy v scrapbooku</span><strong id="sfh-owned">0</strong></div>
         <div class="sfh-row"><span>Vybraný hráč</span><strong id="sfh-selected-player">-</strong></div>
-        <div class="sfh-row"><span>Potenciálně chybí u hráče</span><strong id="sfh-missing">-</strong></div>
+        <div class="sfh-row"><span>Chybějící itemy</span><strong id="sfh-missing">-</strong></div>
         <div class="sfh-row"><span>Lze zlepšit scrapbook</span><strong id="sfh-can-improve">-</strong></div>
         <div class="sfh-player" id="sfh-player">Čekám na data ze hry…</div>
 
