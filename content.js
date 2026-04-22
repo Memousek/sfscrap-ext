@@ -1186,12 +1186,14 @@
         updateOverlay();
         saveState();
         if (playerFromText) {
-          // After a fight reset the throttle so scrapbook is refreshed immediately via API.
-          if (getReqParam(url).includes("fight")) {
-            state.lastScrapbookRefreshAt = 0;
-          }
           void refreshOwnedFromApiIfPossible();
         }
+      }
+      // Always poll the scrapbook after any fight to pick up newly gained items,
+      // even if the fight response itself didn't contain scrapbook.r: data.
+      if (looksLikeGameApiUrl(url) && getReqParam(url).includes("fight") && state.scrapbookReady) {
+        state.lastScrapbookRefreshAt = 0;
+        void refreshOwnedFromApiIfPossible();
       }
       return;
     }
