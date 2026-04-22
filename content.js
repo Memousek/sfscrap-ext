@@ -1151,16 +1151,23 @@
       state.textResponsesSeen += 1;
       const shouldTryOwned = looksLikeScrapbookUrl(url) && looksLikeGameApiUrl(url);
       const ownedFromText = shouldTryOwned ? extractOwnedIdsFromText(payload) : null;
+      // Fight/player API responses include scrapbook.r: with the updated bitmap – parse it directly.
+      const ownedFromPattern = !ownedFromText && looksLikeGameApiUrl(url)
+        ? parseOwnedFromScrapbookRecord(payload)
+        : null;
       const looseArrays = extractBracketNumberArrays(payload)
         .filter((arr) => arr.length >= 100 && arr.length <= 2500 && shouldTryOwned)
         .sort((a, b) => b.length - a.length);
       const looseOwnedFromText = looseArrays.length ? toNumberSet(looseArrays[0]) : null;
       const bestOwnedFromText =
         (ownedFromText && ownedFromText.size >= 10 ? ownedFromText : null) ||
+        (ownedFromPattern && ownedFromPattern.size >= 10 ? ownedFromPattern : null) ||
         (looseOwnedFromText && looseOwnedFromText.size >= 100 ? looseOwnedFromText : null);
       if (bestOwnedFromText && bestOwnedFromText.size >= 10) {
         state.pendingOwnedIds = bestOwnedFromText;
-        if (looksLikeScrapbookUrl(url) || looksLikeScrapbookUrl(window.location.href)) {
+        // Update ownedIds when from a scrapbook URL, when on the scrapbook page,
+        // or when scrapbook.r: was found in any game API response (e.g. fight result).
+        if (looksLikeScrapbookUrl(url) || looksLikeScrapbookUrl(window.location.href) || ownedFromPattern) {
           state.ownedIds = new Set(bestOwnedFromText);
           state.scrapbookReady = true;
         }
@@ -1179,6 +1186,10 @@
         updateOverlay();
         saveState();
         if (playerFromText) {
+          // After a fight reset the throttle so scrapbook is refreshed immediately via API.
+          if (getReqParam(url).includes("fight")) {
+            state.lastScrapbookRefreshAt = 0;
+          }
           void refreshOwnedFromApiIfPossible();
         }
       }
