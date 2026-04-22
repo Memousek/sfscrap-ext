@@ -982,6 +982,7 @@
         <div class="sfh-player" id="sfh-player">Čekám na data ze hry…</div>
 
         <button id="sfh-confirm" type="button">Potvrdit načtený scrapbook</button>
+        <button id="sfh-refresh" type="button">↻ Aktualizovat scrapbook</button>
       </div>
     `;
 
@@ -1006,6 +1007,14 @@
       state.scrapbookReady = true;
       updateOverlay();
       saveState();
+    });
+
+    root.querySelector("#sfh-refresh")?.addEventListener("click", async () => {
+      const btn = root.querySelector("#sfh-refresh");
+      if (btn) btn.disabled = true;
+      state.lastScrapbookRefreshAt = 0;
+      await refreshOwnedFromApiIfPossible();
+      if (btn) btn.disabled = false;
     });
 
   }
